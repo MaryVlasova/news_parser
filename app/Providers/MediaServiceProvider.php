@@ -2,24 +2,23 @@
 
 namespace App\Providers;
 
-ini_set("memory_limit","2048M");
-
+use App\Services\MediaService;
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+class MediaServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
     public function register()
     {
-        //
+        $this->app->bind('Media', MediaService::class);
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */
