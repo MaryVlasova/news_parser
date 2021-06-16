@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\NewsController;
 use App\NewsService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class News extends Command
@@ -55,38 +56,38 @@ class News extends Command
     public function handle()
     {
         $start = now();
-        $this->info('Start');
+        $this->info(Carbon::now()->toDateTimeString() . ' Start');
 
         $news = $this->newsService->getNews();
        
         if(!$news || $news['error']) {
 
-            $this->error('Something went wrong');
+            $this->error(Carbon::now()->toDateTimeString() . ' Something went wrong');
 
         } else if(!$news['error'] && !$news['payload']) {
 
-            $this->info('No news in rss');
+            $this->info(Carbon::now()->toDateTimeString() . ' No news in rss');
 
         } else {
 
             $count = count($news['payload']);
-            $this->comment("$count  news in rss");
-            $this->comment("Processing...");
+            $this->comment(Carbon::now()->toDateTimeString() . " $count  news in rss");
+            $this->comment(Carbon::now()->toDateTimeString() . " Processing...");
             $result = $this->newsController->save($news['payload']);
 
             if (!$result) {
-                $this->error('Something went wrong');
+                $this->error(Carbon::now()->toDateTimeString() . ' Something went wrong');
                 return;
             }
 
             $added = $result['added'];
             $existed = $result['existed'];
-            $this->comment("Added: $added; existed $existed");      
+            $this->comment(Carbon::now()->toDateTimeString() . " Added: $added; existed $existed");      
 
         }
 
         $time = $start->diffInSeconds(now());
-        $this->comment("Processed in $time seconds");
-        $this->info('End');       
+        $this->comment(Carbon::now()->toDateTimeString() . " Processed in $time seconds");
+        $this->info(Carbon::now()->toDateTimeString() .' End');       
     }
 }

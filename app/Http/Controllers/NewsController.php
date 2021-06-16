@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\NewsMedia;
 use App\Models\NewsItem;
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
 use App\Facades\Media;
+use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller
 {
@@ -18,8 +18,14 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $news = NewsItem::all();
-        return view('news', compact($news));
+     
+        if(Auth::check()) {
+            $news = NewsItem::with('newsMedia')->orderBy('published_at', 'desc')->get();;        
+            return view('news', compact('news'));
+        } else {
+            return redirect()->route('login');
+        }
+
     }
 
     public function save(array $data)
