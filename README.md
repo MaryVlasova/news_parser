@@ -15,7 +15,7 @@
 - **php artisan serve
 - **на локальном сервере запустить крон 
 crontab -e
-** * * * * * php /path/to/artisan schedule:run >>/dev/null 2>&1)
+ * * * * * php /path/to/artisan schedule:run >>/dev/null 2>&1)
 
 ## Использование
 
