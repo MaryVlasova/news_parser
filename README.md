@@ -5,18 +5,19 @@
 
 ## Установка
 
-- **установить Php-7.4+
-- **установить MySQL
-- **установить composer
-- **git clone 
-- **composer install
-- **определить подключение к базе в .env
-- **php artisan migrate
-- **php artisan serve
-- **на локальном сервере запустить крон 
-crontab -e
- * * * * * php /path/to/artisan schedule:run >>/dev/null 2>&1)
-
+- установить Php-7.4+
+- установить MySQL
+- установить composer
+- git clone 
+- composer install
+- определить подключение к базе в .env
+- php artisan migrate
+- php artisan serve
+- на локальном сервере запустить крон 
+```
+crontab -e 
+* * * * * php /path/to/artisan schedule:run >>/dev/null 2>&1)
+```
 ## Использование
 
 Основной функционал запускается из коммандной строки php artisan news:parse.
