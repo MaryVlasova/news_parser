@@ -10,6 +10,11 @@ class NewsMedia extends Model
 
     protected $fillable = ['link', 'news_item_id'];
 
+    /**
+     * Set relation
+     *
+     * @return array
+     */
     public function newsItem()
     {
         return $this->belongsTo(NewsItem::class);

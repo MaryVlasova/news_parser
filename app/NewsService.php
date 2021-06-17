@@ -3,21 +3,26 @@
 namespace app;
 
 use App\Models\NewsItemLog;
+use Exception;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use SimpleXMLElement;
 
+/**
+ * Service for getting data from rss and converting
+ */
 class NewsService
 {
-
+   /**
+    * Get data from rss
+    *
+    * @return void
+    */
    private function callApi () 
    {
 
       $requestMethod = 'GET';
       $requestUrl = config('services.rss.link');
-
-      //dd($requestUrl);
     
       try {
 
@@ -35,12 +40,9 @@ class NewsService
                'response_code' => $responseCode
          ]);
 
-
-         // $xml = simplexml_load_string(mb_convert_encoding($responseBody, 'UTF-8'));
-         // dd($xml);
          $news = $this->convertNewsFromXMLToArray ( new SimpleXMLElement(mb_convert_encoding($responseBody, 'UTF-8')));
 
-      } catch (RequestException $e) {
+      } catch (Exception $e) {
 
          return [
             'error' => true,
@@ -55,10 +57,16 @@ class NewsService
         
     }
 
-    public function convertNewsFromXMLToArray ($XMLstring) 
+    /**
+     * Conver XML data to array function
+     *
+     * @param SimpleXMLElement $xm
+     * @return array
+     */
+    public function convertNewsFromXMLToArray ($simpleXmlElement) 
     {
          
-        $channel = (array) $XMLstring->channel;   
+        $channel = (array) $simpleXmlElement->channel;   
          
         $channelItems = collect($channel['item']);
     
@@ -87,6 +95,11 @@ class NewsService
         
     }
 
+    /**
+     * Get news
+     *
+     * @return array
+     */
     public function getNews() 
     {
 

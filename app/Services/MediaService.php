@@ -5,10 +5,19 @@ namespace App\Services;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * Сlass for getting and saving media resources
+ */
 class MediaService 
 {
 
-    public function uploadImage ($url) {
+    /**
+     * upload file
+     *
+     * @param string $url
+     * @return string
+     */
+    public function uploadResource ($url) {
 
         $content = file_get_contents($url);
         $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);

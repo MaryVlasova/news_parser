@@ -8,6 +8,9 @@ use Carbon\Carbon;
 use App\Facades\Media;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Controller for news
+ */
 class NewsController extends Controller
 {
 
@@ -28,6 +31,12 @@ class NewsController extends Controller
 
     }
 
+    /**
+     * Function for saving news
+     *
+     * @param array $data
+     * @return array
+     */
     public function save(array $data)
     {
         $addedCount = 0;  
@@ -58,7 +67,7 @@ class NewsController extends Controller
 
                     foreach($news['media'] as $media) {
               
-                        $fileName = Media::uploadImage($media);
+                        $fileName = Media::uploadResource($media);
                         $mediaItems []= new NewsMedia([
                             'link' => $fileName,
                             'news_item_id'=>$insertedData->id
