@@ -6,7 +6,10 @@ use App\Models\NewsMedia;
 use App\Models\NewsItem;
 use Carbon\Carbon;
 use App\Facades\Media;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 /**
  * Controller for news
@@ -40,14 +43,17 @@ class NewsController extends Controller
     public function save(array $data)
     {
         $addedCount = 0;  
-        $existedCount = 0;     
-               
-        foreach ($data as $news) {
+   
+        try {
 
-            $existItem = NewsItem::where('guid', $news['guid'])->first();
+            DB::statement ('SET FOREIGN_KEY_CHECKS = 0');
+            NewsItem::truncate();
+            NewsMedia::truncate();
+            DB::statement ('SET FOREIGN_KEY_CHECKS = 1'); 
 
-            if($existItem === null) {                
-
+            foreach ($data as $news) {
+                
+    
                 $insertedData = NewsItem::create([                
                     'title' => $news['title'],
                     'link' => $news['link'],
@@ -55,35 +61,42 @@ class NewsController extends Controller
                     'author' => $news['author'] ? $news['author'] : null,
                     'guid' => $news['guid'],
                     'published_at' => Carbon::parse($news['pubDate'])->format('Y-m-d H:i:s')
-                   
+                    
                 ]);
                 
                 $newsItem = NewsItem::find($insertedData->id);
-
+    
                 $mediaItems = [];
                 if($newsItem !== null) {
-
+    
                     $addedCount++;     
-
+    
                     foreach($news['media'] as $media) {
-              
-                        $fileName = Media::uploadResource($media);
+    
+                        // if you want to upload the file to the storage
+                        // Warning: it's too long
+                        //$fileName = Media::uploadResource($media);
                         $mediaItems []= new NewsMedia([
-                            'link' => $fileName,
+                            'link' => $media,
                             'news_item_id'=>$insertedData->id
                         ]);
-                      
+                        
                     };                
                 }
                 $newsItem->newsMedia()->saveMany($mediaItems);
-            } else {
-                $existedCount++;
-            }
+    
+            }                
+
+        } catch (Exception $e) {
+            return [
+                'added'=> $addedCount,
+                'error' => $e->getMessage()
+            ];
         }
    
         return [
             'added'=> $addedCount,
-            'existed' => $existedCount
+            'error' => false
         ];
     }
 

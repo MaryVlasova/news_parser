@@ -79,10 +79,13 @@ class News extends Command
                 $this->error(Carbon::now()->toDateTimeString() . ' Something went wrong');
                 return;
             }
+            if ( $result['error']) {
+                $this->error(Carbon::now()->toDateTimeString() .' ' . $result['error']);
+                return;
+            }
 
-            $added = $result['added'];
-            $existed = $result['existed'];
-            $this->comment(Carbon::now()->toDateTimeString() . " Added: $added; existed $existed");      
+            $added = $result['added'];           
+            $this->comment(Carbon::now()->toDateTimeString() . " Success! Added: $added");      
 
         }
 

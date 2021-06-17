@@ -5,10 +5,17 @@
 
     <div class="row justify-content-center">
         @foreach ($news as $newsItem)    
-        <div class="card" style="width: 18rem;">
+        <div class="card" style="width: 18rem;"> 
             @foreach ($newsItem->newsMedia as $media) 
-                <img loading="lazy" src="{{asset('storage/' .$media->link)}}" class="card-img-top" alt="...">
-                @break
+                @php
+                    $link = new SplFileInfo($media->link);
+                    $extention = $link->getExtension();
+                @endphp            
+                @if ($extention !== 'mp4')
+                    <img loading="lazy" src="{{$media->link}}" class="card-img-top" alt="...">
+                    @break
+                @endif
+
             @endforeach
             
             <div class="card-body">
